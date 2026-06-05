@@ -801,8 +801,3 @@ function LehrerPage({lehrer,saveLehrerFn,delLehrer,askConfirm}){
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
-const SUPA_URL = "https://angdxojhkdgutolggujg.supabase.co";
-const SUPA_KEY = "sb_publishable_5lgEl7IDOk6IKOVVaa9pQw_oYYls5gU";
-const supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
-
-const { useState, useEffect } = React;
