@@ -273,7 +273,8 @@ function App(){
       React.createElement("button",{
         onClick:()=>supabase.auth.signOut(),
         style:{padding:"6px 12px",borderRadius:20,border:"1px solid #E8D080",background:"white",color:"#888",fontSize:12,cursor:"pointer",fontFamily:"inherit"}
-      },"Abmelden")                  
+      },"Abmelden")
+          ),
             syncing&&React.createElement("div",{style:{fontSize:11,color:GOLD,padding:"3px 10px",background:`${GOLD}14`,borderRadius:20}},"⟳ Speichern..."),
             React.createElement("nav",{style:{display:"flex",gap:2,flexWrap:"wrap"}},
               NAV.map(n=>React.createElement("button",{key:n.id,onClick:()=>setPage(n.id),style:{padding:"10px 14px",border:"none",background:page===n.id?`${GOLD}18`:"transparent",color:page===n.id?GOLD:"#888",fontSize:13,fontWeight:page===n.id?700:400,borderRadius:8,cursor:"pointer",fontFamily:"inherit",borderBottom:page===n.id?`2px solid ${GOLD}`:"2px solid transparent"}},n.label))
