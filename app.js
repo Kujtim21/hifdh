@@ -307,7 +307,7 @@ function App(){
 
   return React.createElement("div",{style:{minHeight:"100vh",background:"#FAFAF8",fontFamily:"system-ui,sans-serif",color:DARK}},
     React.createElement("div",{style:{background:"white",borderBottom:`2px solid ${GOLD}33`,boxShadow:`0 2px 16px rgba(201,168,76,0.12)`,position:"sticky",top:0,zIndex:100}},
-React.createElement("div",{style:{maxWidth:1100,margin:"0 auto",padding:"0 1.25rem",display:"flex",alignItems:"center",gap:16,flexWrap:"wrap"}},
+React.createElement("div",{style:{maxWidth:1100,margin:"0 auto",padding:"0 1.25rem",display:"flex",alignItems:"center",gap:16,flexWrap:"nowrap"}},
   React.createElement("div",{style:{display:"flex",alignItems:"center",gap:10,padding:"12px 0",flex:1}},
     React.createElement("div",{style:{width:40,height:40,borderRadius:10,background:`linear-gradient(135deg,${GOLD},#E8C55A)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}},"🕌"),
     React.createElement("div",null,
