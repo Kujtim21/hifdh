@@ -237,10 +237,10 @@ function App(){
 
   const NAV=[
     {id:"overview",label:"Übersicht"},
-    {id:"statistik",label:"Statistik"},
     {id:"students",label:"Schüler"},
     {id:"lektionen",label:"Lektionen"},
     {id:"lehrer",label:"Lehrpersonen"},
+    {id:"statistik",label:"Statistik"},    
   ];
 
   if(loading) return React.createElement("div",{style:{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"system-ui"}},
