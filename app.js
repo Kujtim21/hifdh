@@ -203,7 +203,7 @@ function ResetPasswordScreen(){
   );
 }
 
-function ProfileMenu({user, onSignOut}){
+function ProfileMenu({user, onSignOut, isAdmin}){
   const [open, setOpen] = useState(false);
   const [confirm, setConfirm] = useState(false);
 
@@ -359,7 +359,7 @@ React.createElement("div",{style:{maxWidth:1100,margin:"0 auto",padding:"0 1.25r
         React.createElement("div",{style:{fontSize:10,color:GOLD,fontWeight:600,letterSpacing:1.2,textTransform:"uppercase"}},"Maktab · Unterrichtsverwaltung")
       )
     ),
-    React.createElement(ProfileMenu,{user,onSignOut:()=>supabase.auth.signOut()})
+    React.createElement(ProfileMenu,{user,onSignOut:()=>supabase.auth.signOut(),isAdmin})
   ),
   // Zeile 2: Navigation
   React.createElement("div",{style:{display:"flex",alignItems:"center",borderTop:`1px solid ${GOLD}22`,marginTop:4, padding:"6px 0"}},
