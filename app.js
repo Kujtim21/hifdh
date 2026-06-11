@@ -808,7 +808,6 @@ showProg&&React.createElement("div",{style:{background:c.light,border:`1.5px sol
               transition:"all 0.15s"}},
             React.createElement("div",{style:{width:20,height:20,borderRadius:6,border:`2px solid ${checked?"#27AE60":isNext?GOLD:"#DDD"}`,background:checked?"#27AE60":isNext?`${GOLD}22`:"white",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:12,color:"white",fontWeight:700}},checked?"✓":""),
             React.createElement("span",{style:{fontSize:13,color:checked?"#27AE60":isNext?DARK:"#AAA",fontWeight:checked||isNext?600:400,flex:1}},sr),
-            isNext&&React.createElement("span",{style:{fontSize:10,color:GOLD,fontWeight:600}},"← aktuell")
           );
         }),
         React.createElement("div",{style:{marginTop:8,fontSize:12,color:"#888"}},
@@ -901,7 +900,12 @@ showProg&&React.createElement("div",{style:{background:c.light,border:`1.5px sol
               React.createElement("span",{style:{color:"#DDD",fontSize:16}},"›")
             )
           ),
-          (s.klasse==="A"||s.klasse==="B")&&stuProg?.text&&React.createElement("div",{style:{marginTop:5,marginLeft:50,fontSize:12,color:c.color,background:c.light,display:"inline-block",padding:"2px 10px",borderRadius:20,border:`1px solid ${c.border}33`}},`${s.klasse==="A"?"📖":"✏️"} ${stuProg.text}`)
+          (s.klasse==="A"||s.klasse==="B")&&React.createElement("div",{style:{marginTop:5,marginLeft:50,fontSize:12,color:c.color,background:c.light,display:"inline-block",padding:"2px 10px",borderRadius:20,border:`1px solid ${c.border}33`}},
+            s.klasse==="A"
+              ? (()=>{const next=SUREN.find(sr=>!(stuProg?.checked||[]).includes(sr)); return next?"📖 "+next.split("–")[0].trim():null;})()
+              : stuProg?.text?"✏️ "+stuProg.text:null
+          )
+                                   
         );
       })
     ),
