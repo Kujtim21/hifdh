@@ -792,7 +792,9 @@ function Students({students,lektionen,byCls,clsById,getStats,getLastAtt,saveStud
 showProg&&React.createElement("div",{style:{background:c.light,border:`1.5px solid ${c.border}33`,borderRadius:12,padding:"12px 14px",marginBottom:14}},
   React.createElement("div",{style:{fontSize:11,color:c.color,fontWeight:600,textTransform:"uppercase",letterSpacing:1,marginBottom:10}},s.klasse==="A"?"📖 Suren – Fortschritt":"✏️ Aktueller Buchstabe"),
   s.klasse==="A"
-    ? React.createElement("div",{style:{display:"flex",flexDirection:"column",gap:4}},
+      const checkedList = stuProg?.checked || [];
+      const firstUncheckedIndex = SUREN.findIndex(sr => !checkedList.includes(sr));
+    ? React.createElement("div",{style:{display:"flex",flexDirection:"column",gap:4}},  
         SUREN.map((sr,i)=>{
           const checked=(stuProg?.checked||[]).includes(sr);
           const isNext=!checked&&(stuProg?.checked||[]).length===i;
