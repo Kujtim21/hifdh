@@ -356,7 +356,7 @@ React.createElement("div",{style:{maxWidth:1100,margin:"0 auto",padding:"0 1.25r
     React.createElement(ProfileMenu,{user,onSignOut:()=>supabase.auth.signOut()})
   ),
   // Zeile 2: Navigation
-  React.createElement("div",{style:{display:"flex",alignItems:"center",borderTop:`1px solid ${GOLD}22`,marginTop:4, padding:"6px 0",}},
+  React.createElement("div",{style:{display:"flex",alignItems:"center",borderTop:`1px solid ${GOLD}22`,marginTop:4}},
     syncing&&React.createElement("div",{style:{fontSize:11,color:GOLD,padding:"3px 8px",background:`${GOLD}14`,borderRadius:20,flexShrink:0,marginRight:4}},"⟳"),
     React.createElement("nav",{style:{display:"flex",gap:2,overflowX:"auto",WebkitOverflowScrolling:"touch",scrollbarWidth:"none",msOverflowStyle:"none",flex:1}},
       NAV.map(n=>React.createElement("button",{key:n.id,onClick:()=>setPage(n.id),style:{padding:"8px 14px",border:"none",background:page===n.id?`${GOLD}18`:"transparent",color:page===n.id?GOLD:"#888",fontSize:13,fontWeight:page===n.id?700:400,borderRadius:8,cursor:"pointer",fontFamily:"inherit",borderBottom:page===n.id?`2px solid ${GOLD}`:"2px solid transparent",whiteSpace:"nowrap"}},n.label))
