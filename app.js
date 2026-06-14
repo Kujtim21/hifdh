@@ -52,6 +52,19 @@ async function setFortschritt(data) {
   await supabase.from("fortschritt").upsert({ id:"main", data });
 }
 
+async function getStudentProgress(sid) {
+  const { data } = await supabase.from("fortschritt_schueler").select("*").eq("schueler_id", sid);
+  return data?.[0] || null;
+}
+async function saveStudentProgressDB(sid, updates) {
+  const { error } = await supabase.from("fortschritt_schueler").upsert({
+    schueler_id: sid,
+    ...updates,
+    updated_at: new Date().toISOString().slice(0,10)
+  });
+  if (error) throw error;
+}
+
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 function initials(n=""){ return (n||"").split(" ").map(w=>w[0]||"").join("").toUpperCase().slice(0,2)||"?"; }
 function todaySunday(){ const d=new Date(),dow=d.getDay(); d.setDate(d.getDate()-(dow===0?0:dow)); return d.toISOString().slice(0,10); }
@@ -274,13 +287,18 @@ function App(){
     if(!user)return;
     (async()=>{
       try {
-        const [s,t,l,p] = await Promise.all([
+        const [s,t,l,p,sp] = await Promise.all([
           getAll("schueler","nachname"),
           getAll("lektionen","date"),
           getAll("lehrer","name"),
           getFortschritt(),
+          getAll("fortschritt_schueler","schueler_id"),
         ]);
-        setStudents(s); setLektionen(t.reverse()); setLehrer(l); setProgress(p);
+        // Merge student progress into progress.students
+        const studentsMap = {};
+        sp.forEach(row => { studentsMap[row.schueler_id] = row; });
+        const mergedProgress = { ...p, students: studentsMap };
+        setStudents(s); setLektionen(t.reverse()); setLehrer(l); setProgress(mergedProgress);
         const currentLehrer = l.find(x => x.email === user?.email);
         setIsAdmin(currentLehrer?.is_admin === true);
       } catch(e){ setError("Verbindungsfehler: "+e.message); }
@@ -302,7 +320,26 @@ function App(){
   const delLehrer    = wrap(async id => { await deleteRow("lehrer",id); setLehrer(l=>l.filter(x=>x.id!==id)); });
   const saveProgress = wrap(async p => { setProgress(p); await setFortschritt(p); });
   const saveClassProgress  = p => saveProgress({...progress,[p.cid]:{page:p.val,updatedAt:new Date().toISOString().slice(0,10)}});
-  const saveStudentProgress= (sid,data) => saveProgress({...progress,students:{...(progress.students||{}),[sid]:typeof data==="string"?{text:data,updatedAt:new Date().toISOString().slice(0,10)}:data}});
+  const saveStudentProgress = wrap(async (sid, data) => {
+  const current = await getStudentProgress(sid);
+  const merged = { ...(current||{}) };
+  if (typeof data === "string") {
+    merged.text_stand = data;
+  } else {
+    if (data.checked !== undefined) merged.checked = data.checked;
+    if (data.text !== undefined) merged.text_stand = data.text;
+    if (data.tests !== undefined) merged.tests = data.tests;
+  }
+  await saveStudentProgressDB(sid, merged);
+  // Update local progress state
+  setProgress(p => ({
+    ...p,
+    students: {
+      ...(p.students||{}),
+      [sid]: merged
+    }
+  }));
+});
 
   const askConfirm=(msg,onYes)=>setConfirm({msg,onYes});
   const clsById=id=>CLASSES.find(c=>c.id===id)||CLASSES[0];
@@ -688,9 +725,7 @@ function SureTest({s, c, stuProg, progress, saveStudentProgress, isAdmin}){
     };
     const existing = stuProg || {};
     await saveStudentProgress(s.id, {
-      ...existing,
-      tests: [newTest, ...(existing.tests||[])].slice(0,50),
-      updatedAt: new Date().toISOString().slice(0,10)
+      tests: [newTest, ...(existing.tests||[])].slice(0,50)
     });
     setSelectedSure("");
     setSaving(false);
@@ -872,7 +907,7 @@ showProg && React.createElement("div", { style: { background: c.light, border: `
         );
       })()
     : React.createElement("input", {
-        defaultValue: stuProg?.text || "",
+        defaultValue: stuProg?.text_stand || "",
         onBlur: e => saveStudentProgress(s.id, { text: e.target.value.trim(), updatedAt: new Date().toISOString().slice(0, 10) }),
         onKeyDown: e => { if (e.key === "Enter") saveStudentProgress(s.id, { text: e.target.value.trim(), updatedAt: new Date().toISOString().slice(0, 10) }); },
         placeholder: "z.B. Ba, Ta, Tha...",
@@ -966,7 +1001,7 @@ showProg && React.createElement("div", { style: { background: c.light, border: `
           (s.klasse==="A"||s.klasse==="B")&&React.createElement("div",{style:{marginTop:5,marginLeft:50,fontSize:12,color:c.color,background:c.light,display:"inline-block",padding:"2px 10px",borderRadius:20,border:`1px solid ${c.border}33`}},
             s.klasse==="A"
               ? (()=>{const next=SUREN.find(sr=>!(stuProg?.checked||[]).includes(sr)); return next?"📖 "+next.split("–")[0].trim():null;})()
-              : stuProg?.text?"✏️ "+stuProg.text:null
+              : stuProg?.text_stand?"✏️ "+stuProg.text_stand:null
           )
                                    
         );
